@@ -27,7 +27,7 @@ async def private_receive_handler(c: Client, m: Message):
     try:
         log_msg = await m.forward(chat_id=Var.BIN_CHANNEL)
         reply_markup, Stream_Text, stream_link = await gen_link(m=m, log_msg=log_msg, from_channel=False)
-        await log_msg.reply_text(text=f"**RᴇQᴜᴇꜱᴛᴇᴅ ʙʏ :** [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n**Uꜱᴇʀ ɪᴅ :** `{m.from_user.id}`\n**Dᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋ :** {stream_link}", disable_web_page_preview=True, parse_mode=ParseMode.MARKDOWN, quote=True)
+        await log_msg.reply_text(text=f"**Solicitado por :** [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n**ID do Usuário:** `{m.from_user.id}`\n**Link de Download:** {stream_link}", disable_web_page_preview=True, parse_mode=ParseMode.MARKDOWN, quote=True)
 
         await m.reply_text(
             text=Stream_Text,
@@ -39,7 +39,7 @@ async def private_receive_handler(c: Client, m: Message):
     except FloodWait as e:
         print(f"Sleeping for {str(e.value)}s")
         await asyncio.sleep(e.value)
-        await c.send_message(chat_id=Var.BIN_CHANNEL, text=f"Gᴏᴛ FʟᴏᴏᴅWᴀɪᴛ ᴏғ {str(e.value)}s from [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n\n**𝚄𝚜𝚎𝚛 𝙸𝙳 :** `{str(m.from_user.id)}`", disable_web_page_preview=True, parse_mode=ParseMode.MARKDOWN)
+        await c.send_message(chat_id=Var.BIN_CHANNEL, text=f"Recebi uma espera de inundação {str(e.value)}s from [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n\n**ID do Usuário:** `{str(m.from_user.id)}`", disable_web_page_preview=True, parse_mode=ParseMode.MARKDOWN)
 
 @StreamBot.on_message(filters.channel & (filters.document | filters.video), group=-1)
 async def channel_receive_handler(bot, broadcast: Message):
@@ -52,7 +52,7 @@ async def channel_receive_handler(bot, broadcast: Message):
         log_msg = await broadcast.forward(chat_id=Var.BIN_CHANNEL)
         reply_markup, Stream_Text, stream_link = await gen_link(m=broadcast, log_msg=log_msg, from_channel=True)
         await log_msg.reply_text(
-            text=f"**Cʜᴀɴɴᴇʟ Nᴀᴍᴇ:** `{broadcast.chat.title}`\n**Cʜᴀɴɴᴇʟ ID:** `{broadcast.chat.id}`\n**Rᴇǫᴜᴇsᴛ ᴜʀʟ:** {stream_link}",
+            text=f"**Nome do canal:** `{broadcast.chat.title}`\n**ID do Canal:** `{broadcast.chat.id}`\n**Solicitado por:** {stream_link}",
             # text=f"**Cʜᴀɴɴᴇʟ Nᴀᴍᴇ:** `{broadcast.chat.title}`\n**Cʜᴀɴɴᴇʟ ID:** `{broadcast.chat.id}`\n**Rᴇǫᴜᴇsᴛ ᴜʀʟ:** https://t.me/FxStreamBot?start=msgid_{str(log_msg.id)}",
             quote=True,
             parse_mode=ParseMode.MARKDOWN
@@ -61,13 +61,13 @@ async def channel_receive_handler(bot, broadcast: Message):
             chat_id=broadcast.chat.id,
             message_id=broadcast.id,
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Dᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋ 📥", url=stream_link)]])
+                [[InlineKeyboardButton("📥 Link de Download", url=stream_link)]])
         )
     except FloodWait as w:
         print(f"Sleeping for {str(w.value)}s")
         await asyncio.sleep(w.value)
         await bot.send_message(chat_id=Var.BIN_CHANNEL,
-                             text=f"Gᴏᴛ FʟᴏᴏᴅWᴀɪᴛ ᴏғ {str(w.value)}s from {broadcast.chat.title}\n\n**Cʜᴀɴɴᴇʟ ID:** `{str(broadcast.chat.id)}`",
+                             text=f"Recebi uma espera de inundação {str(w.value)}s from {broadcast.chat.title}\n\n**ID do Canal:** `{str(broadcast.chat.id)}`",
                              disable_web_page_preview=True, parse_mode=ParseMode.MARKDOWN)
     except Exception as e:
         await bot.send_message(chat_id=Var.BIN_CHANNEL, text=f"**#ᴇʀʀᴏʀ_ᴛʀᴀᴄᴇʙᴀᴄᴋ:** `{e}`", disable_web_page_preview=True, parse_mode=ParseMode.MARKDOWN)
@@ -79,7 +79,7 @@ async def private_receive_handler(c: Client, m: Message):
     try:
         log_msg = await m.forward(chat_id=Var.BIN_CHANNEL)
         reply_markup, Stream_Text, stream_link = await gen_link(m=m, log_msg=log_msg, from_channel=True)
-        await log_msg.reply_text(text=f"**RᴇQᴜᴇꜱᴛᴇᴅ ʙʏ :** [{m.chat.first_name}](tg://user?id={m.chat.id})\n**Group ɪᴅ :** `{m.from_user.id}`\n**Dᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋ :** {stream_link}", disable_web_page_preview=True, parse_mode=ParseMode.MARKDOWN, quote=True)
+        await log_msg.reply_text(text=f"**Solicitado por:** [{m.chat.first_name}](tg://user?id={m.chat.id})\n**ID do Grupo:** `{m.from_user.id}`\n**Link de Download:** {stream_link}", disable_web_page_preview=True, parse_mode=ParseMode.MARKDOWN, quote=True)
 
         await m.reply_text(
             text=Stream_Text,
